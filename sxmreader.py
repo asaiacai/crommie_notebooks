@@ -2,6 +2,7 @@ import pims
 import pySPM as spm
 import numpy as np
 from skimage.transform import resize
+from skimage import exposure
 
 #@pims.pipeline
 #def gray(image):
@@ -9,20 +10,24 @@ from skimage.transform import resize
 #frames = gray(pims.open('../track_molecules/*.bmp'))
 
 class SXMReader(pims.FramesSequence):
-    def __init__(self, filename_pattern):
-        #self.filenames = glob.glob(filename_pattern)
-        self.aaaa="aaaa"
+    def __init__(self, filename_pattern, channel = "Z"):
         self.filenames = filename_pattern
         self.scans = [spm.SXM(filename) for filename in self.filenames]
         self.smallest = 9999999
         self.z_data = []
+        self.channel = channel
         for i, s in enumerate(self.scans):
-            pxs = s.get_channel("Z").correct_lines().pixels
+            if channel == "Bias":
+                pxs = s.get_channel("Bias").pixels
+            else:
+                pxs = s.get_channel("Z").pixels
+            
             f = open(self.filenames[i], "r", encoding='latin-1')
             lines = f.readlines()
             scan_up = [lines[i+1 % len(lines)] for i, x in enumerate(lines) if x == ':SCAN_DIR:\n'][0].strip() == 'up'
             if not scan_up:
                 pxs = pxs[::-1]
+            
             self.smallest = min(self.smallest, pxs.shape[0])
             self.z_data.append(pxs)
         self._len = len(self.z_data)
@@ -35,13 +40,16 @@ class SXMReader(pims.FramesSequence):
         # Access the data you need and get it into a numpy array.
         # Then return a Frame like so:
         image = self.z_data[i]
-        min_z = np.amin(image)
-        max_z = np.amax(image)
-        image -= min_z
-        image /= max_z-min_z
-        image = resize(image, self.frame_shape)
-        return pims.Frame(image, frame_no=i)
-
+        if self.channel == "Bias":
+            return pims.Frame(image, frame_no=i)
+        else:
+            v_min, v_max = np.percentile(image, (0.2, 99.8))
+            image = exposure.rescale_intensity(
+                image, in_range=(v_min, v_max)
+                )        
+#             image = resize(image, self.frame_shape)
+            return pims.Frame(image, frame_no=i)
+    
     def __len__(self):
         return self._len
     
