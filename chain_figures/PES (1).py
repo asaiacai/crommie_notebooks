@@ -39,8 +39,8 @@ pgf_with_latex = {                      # setup matplotlib to use latex for outp
     "ytick.labelsize": 8,
     "figure.figsize": figsize(1),       # default fig size of 0.9 textwidth
     "pgf.preamble": [
-        r"\usepackage[utf8x]{inputenc}",    # use utf8 fonts becasue your computer can handle it :)
-        r"\usepackage[T1]{fontenc}",        # plots will be generated using this preamble
+    #    r"\usepackage[utf8x]{inputenc}",    # use utf8 fonts becasue your computer can handle it :)
+    #    r"\usepackage[T1]{fontenc}",        # plots will be generated using this preamble
         ]
     }
 mpl.rcParams.update(pgf_with_latex)
@@ -120,7 +120,7 @@ x_data = exp_data['Unnamed: 0'][6:] + 10
 y_data = exp_data['100 nm, avg'][6:]
 
 x = np.linspace(0,sample-1,sample)
-plt.plot(x,x,color='white',linewidth=2,linestyle='-.',label='Equilibrium density')
+plt.plot(x,x,color='white',linewidth=0,linestyle='-.',label='Equilibrium density')
 
 ## overlay actual experimental data
 p, V = np.polyfit(x_data, y_data, 1, cov=True)
@@ -148,7 +148,7 @@ plt.arrow((0.2+margin/3)*N,0.2*N,(0.6 - margin)*N,0,width=0.5,head_width = 5,col
 plt.arrow(0.8*N,(0.2+margin/3)*N,0,(0.6 - margin)*N,width=0.5,head_width = 5,color='black')
 """
 plt.tight_layout()
-plt.savefig('PES.svg')
+plt.savefig('PES.pdf')
 plt.show()
 
 

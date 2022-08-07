@@ -10,7 +10,7 @@ from skimage import exposure
 #frames = gray(pims.open('../track_molecules/*.bmp'))
 
 class SXMReader(pims.FramesSequence):
-    def __init__(self, filename_pattern, channel = "Z"):
+    def __init__(self, filename_pattern, channel = "Z", correct = None):
         self.filenames = filename_pattern
         self.scans = [spm.SXM(filename) for filename in self.filenames]
         self.smallest = 9999999
@@ -20,7 +20,14 @@ class SXMReader(pims.FramesSequence):
             if channel == "Bias":
                 pxs = s.get_channel("Bias").pixels
             else:
-                pxs = s.get_channel("Z").pixels
+                if correct == "lines":
+                    pxs = s.get_channel("Z").correct_lines().pixels
+                elif correct == "plane":
+                    pxs = s.get_channel("Z").correct_plane().pixels
+                elif correct == "slope":
+                    pxs = s.get_channel("Z").correct_slope().pixels
+                else:
+                    pxs = s.get_channel("Z").pixels
             
             f = open(self.filenames[i], "r", encoding='latin-1')
             lines = f.readlines()
