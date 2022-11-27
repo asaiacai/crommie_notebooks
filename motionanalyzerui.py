@@ -1439,12 +1439,12 @@ class AnalyzeUI(ipy.Box):
         
         #initiate trained model
         weighted_loss = dt.losses.flatten(dt.losses.weighted_crossentropy((10,1)))
-        self.model = keras.models.load_model(
-            os.getcwd()+'/motionanalyze_model/iou-0.8610_N1_32-64-128-256_512_lossWL-BCE_bs32_nob60_lrsLIN_doREG.hdf5',
-            custom_objects={
-                'nd_unet_crossentropy': weighted_loss,
-                'iou_coef': iou_coef
-                })
+#         self.model = keras.models.load_model(
+#             os.getcwd()+'/motionanalyze_model/iou-0.8610_N1_32-64-128-256_512_lossWL-BCE_bs32_nob60_lrsLIN_doREG.hdf5',
+#             custom_objects={
+#                 'nd_unet_crossentropy': weighted_loss,
+#                 'iou_coef': iou_coef
+#                 })
         
         self.nsize = initialwg_list[2].value
         get_currentranges()

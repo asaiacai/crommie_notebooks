@@ -1,0 +1,9 @@
+molecule_size : 7
+min_mass : 1
+max_mass : 4.2
+min_size : 1
+max_ecc : 3
+separation : 5
+search_range : 70
+adaptive_stop : 5
+diffusion_time : 60

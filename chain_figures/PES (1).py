@@ -120,7 +120,7 @@ x_data = exp_data['Unnamed: 0'][6:] + 10
 y_data = exp_data['100 nm, avg'][6:]
 
 x = np.linspace(0,sample-1,sample)
-plt.plot(x,x,color='white',linewidth=0,linestyle='-.',label='Equilibrium density')
+plt.plot(x,x,color='white',linewidth=3,linestyle='-.',label='Equilibrium density')
 
 ## overlay actual experimental data
 p, V = np.polyfit(x_data, y_data, 1, cov=True)
